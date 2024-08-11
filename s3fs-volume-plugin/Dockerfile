@@ -11,8 +11,7 @@ RUN apt update && \
 COPY s3fs-volume-plugin/rsyslog.conf /etc/rsyslog.conf
 COPY s3fs-volume-plugin/fuse.conf /etc/fuse.conf
 
-ARG GO_VERSION
-FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:${GO_VERSION:-1.15.10}-alpine AS dev
+FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:1.22-alpine AS dev
 
 RUN apk update && apk add git
 
@@ -20,8 +19,8 @@ COPY s3fs-volume-plugin/ /go/src/github.com/sovarto/docker-volume-plugins/s3fs-v
 COPY mounted-volume/ /go/src/github.com/sovarto/docker-volume-plugins/mounted-volume
 
 RUN cd /go/src/github.com/sovarto/docker-volume-plugins/s3fs-volume-plugin && \
-    CGO_ENABLED=0 GOOS=linux go get
+    CGO_ENABLED=0 GOOS=linux go build -o /s3fs-volume-plugin
 
 FROM base
 
-COPY --from=dev /go/bin/s3fs-volume-plugin /
+COPY --from=dev /s3fs-volume-plugin /
