@@ -1,6 +1,0 @@
-sudo: required
-services:
-- docker
-script:
-- echo "$DOCKER_PASSWORD" | sudo docker login -u "mochoa" --password-stdin
-- sudo ./build.sh $TRAVIS_TAG
