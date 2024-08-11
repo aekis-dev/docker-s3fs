@@ -1,5 +1,10 @@
 Changelog
 =========
+## 2.0.10
+
+* Removed all plugins except S3Fs
+* Fixed S3Fs build issues
+
 ## 2.0.4
 
 * Fixed defunct process on GlusterFS plugin.
