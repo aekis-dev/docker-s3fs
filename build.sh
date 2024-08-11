@@ -48,6 +48,5 @@ build() {
         docker plugin push sovarto/$1-$ARCH:$TAG
     fi
 }
-build glusterfs-volume-plugin
+
 build s3fs-volume-plugin
-build cifs-volume-plugin

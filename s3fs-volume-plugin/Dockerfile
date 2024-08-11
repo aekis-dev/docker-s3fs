@@ -1,5 +1,5 @@
 ARG UBUNTU_VERSION
-FROM --platform=${TARGETPLATFORM:-linux/amd64} ubuntu:${UBUNTU_VERSION:-20.04} as base
+FROM --platform=${TARGETPLATFORM:-linux/amd64} ubuntu:${UBUNTU_VERSION:-20.04} AS base
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
@@ -12,7 +12,7 @@ COPY s3fs-volume-plugin/rsyslog.conf /etc/rsyslog.conf
 COPY s3fs-volume-plugin/fuse.conf /etc/fuse.conf
 
 ARG GO_VERSION
-FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:${GO_VERSION:-1.15.10}-alpine as dev
+FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:${GO_VERSION:-1.15.10}-alpine AS dev
 
 RUN apk update && apk add git
 
