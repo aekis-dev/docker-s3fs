@@ -1,4 +1,4 @@
-package mountedvolume
+package main
 
 import (
 	"flag"
@@ -29,7 +29,7 @@ type DriverCallback interface {
 	Validate(req *volume.CreateRequest) error
 
 	// MountOptions specifies the options to be added to the mount process
-	MountOptions(req *volume.CreateRequest) []string
+	MountOptions(req *volume.CreateRequest) ([]string, error)
 
 	// PreMount is called before the mount occurs.  This can be used to deal with scenarios where the credential data need to be unlocked.
 	PreMount(req *volume.MountRequest) error
@@ -78,7 +78,10 @@ func (p *Driver) Create(req *volume.CreateRequest) error {
 		return err
 	}
 
-	args := p.MountOptions(req)
+	args, err := p.MountOptions(req)
+	if err != nil {
+		return err
+	}
 	status := make(map[string]interface{})
 	status["mounted"] = false
 	status["args"] = args

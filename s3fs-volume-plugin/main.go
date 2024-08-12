@@ -1,17 +1,17 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/docker/go-plugins-helpers/volume"
-	mountedvolume "github.com/sovarto/docker-volume-plugins/mounted-volume"
 )
 
 type s3fsDriver struct {
 	defaultS3fsopts string
-	mountedvolume.Driver
+	Driver
 }
 
 func (p *s3fsDriver) Validate(req *volume.CreateRequest) error {
@@ -19,9 +19,15 @@ func (p *s3fsDriver) Validate(req *volume.CreateRequest) error {
 	return nil
 }
 
-func (p *s3fsDriver) MountOptions(req *volume.CreateRequest) []string {
+func (p *s3fsDriver) MountOptions(req *volume.CreateRequest) ([]string, error) {
 
 	s3fsopts, s3fsoptsInOpts := req.Options["s3fsopts"]
+	bucket, bucketInOpts := req.Options["bucket"]
+	folder, folderInOpts := req.Options["folder"]
+
+	if !bucketInOpts {
+		return nil, errors.New("driver option 'bucket' is mandatory")
+	}
 
 	var s3fsoptsArray []string
 	if s3fsoptsInOpts && s3fsopts != ""{
@@ -29,9 +35,13 @@ func (p *s3fsDriver) MountOptions(req *volume.CreateRequest) []string {
 	} else if p.defaultS3fsopts != "" {
 		s3fsoptsArray = append(s3fsoptsArray, strings.Split(p.defaultS3fsopts, ",")...)
 	}
-	s3fsoptsArray = AppendBucketOptionsByVolumeName(s3fsoptsArray, req.Name)
+	bucketOption := "bucket=" + bucket
+	if folderInOpts {
+		bucketOption = bucketOption +  ":/" + folder
+	}
+	s3fsoptsArray = append(s3fsoptsArray, bucketOption)
 
-	return []string{"-o", strings.Join(s3fsoptsArray, ",")}
+	return []string{"-o", strings.Join(s3fsoptsArray, ",")}, nil
 }
 
 func (p *s3fsDriver) PreMount(req *volume.MountRequest) error {
@@ -41,19 +51,10 @@ func (p *s3fsDriver) PreMount(req *volume.MountRequest) error {
 func (p *s3fsDriver) PostMount(req *volume.MountRequest) {
 }
 
-// AppendBucketOptionsByVolumeName appends the command line arguments into the current argument list given the volume name
-func AppendBucketOptionsByVolumeName(args []string, volumeName string) []string {
-	parts := strings.SplitN(volumeName, "/", 2)
-	if len(parts) == 2 {
-		return append(args, "bucket="+parts[0]+":/"+parts[1])
-	}
-	return append(args, "bucket="+parts[0])
-}
-
 func buildDriver() *s3fsDriver {
 	defaultsopts := os.Getenv("DEFAULT_S3FSOPTS")
 	d := &s3fsDriver{
-		Driver:          *mountedvolume.NewDriver("s3fs", false, "s3fs", "local"),
+		Driver:          *NewDriver("s3fs", false, "s3fs", "local"),
 		defaultS3fsopts: defaultsopts,
 	}
 	d.Init(d)

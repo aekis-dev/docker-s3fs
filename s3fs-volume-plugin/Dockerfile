@@ -15,11 +15,9 @@ FROM --platform=${TARGETPLATFORM:-linux/amd64} golang:1.22-alpine AS dev
 
 RUN apk update && apk add git
 
-COPY s3fs-volume-plugin/ /go/src/github.com/sovarto/docker-volume-plugins/s3fs-volume-plugin
-COPY mounted-volume/ /go/src/github.com/sovarto/docker-volume-plugins/mounted-volume
+COPY s3fs-volume-plugin /src/
 
-RUN cd /go/src/github.com/sovarto/docker-volume-plugins/s3fs-volume-plugin && \
-    CGO_ENABLED=0 GOOS=linux go build -o /s3fs-volume-plugin
+RUN cd /src/ && CGO_ENABLED=0 GOOS=linux go build -o /s3fs-volume-plugin
 
 FROM base
 

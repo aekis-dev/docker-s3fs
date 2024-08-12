@@ -16,6 +16,10 @@ jobs:
               run: |
                 TAG=$(echo "${GITHUB_REF#refs/tags/}" | sed 's/^v//')
                 echo "TAG=$TAG" >> $GITHUB_ENV
+            
+            - name: Set version number in config.json
+              run: |
+                  sed -i 's/vDEV/v'"${{ env.TAG }}"'/g' s3fs-volume-plugin/config.json
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3

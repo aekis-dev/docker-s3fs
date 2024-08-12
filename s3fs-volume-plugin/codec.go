@@ -1,4 +1,4 @@
-package mountedvolume
+package main
 
 import (
 	"bytes"
