@@ -24,9 +24,9 @@ func (p *s3fsDriver) MountOptions(req *volume.CreateRequest) []string {
 	s3fsopts, s3fsoptsInOpts := req.Options["s3fsopts"]
 
 	var s3fsoptsArray []string
-	if s3fsoptsInOpts {
+	if s3fsoptsInOpts && s3fsopts != ""{
 		s3fsoptsArray = append(s3fsoptsArray, strings.Split(s3fsopts, ",")...)
-	} else {
+	} else if p.defaultS3fsopts != "" {
 		s3fsoptsArray = append(s3fsoptsArray, strings.Split(p.defaultS3fsopts, ",")...)
 	}
 	s3fsoptsArray = AppendBucketOptionsByVolumeName(s3fsoptsArray, req.Name)
