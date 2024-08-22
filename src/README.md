@@ -19,12 +19,12 @@ There are three operating modes listed in order of preference.  Each are mutuall
 
 This is the *recommended* approach for production systems as it will prevent stacks from specifying any random server.  It also prevents the stack configuration file from containing environment specific key/secrets and instead defers that knowledge to the plugin only which is set on the node level.  This relies on `AWSACCESSKEYID/AWSSECRETACCESSKEY` being configured and will use the name as the volume mount set by [`docker plugin set`](https://docs.docker.com/engine/reference/commandline/plugin_set/).  This can be done in an automated fashion as:
 
-    docker plugin install --alias PLUGINALIAS \
-      mochoa/s3fs-volume-plugin \
+    docker plugin install --alias aek-s3fs \
+      aek/docker-s3fs \
       --grant-all-permissions --disable
-    docker plugin set PLUGINALIAS AWSACCESSKEYID=key
-    docker plugin set PLUGINALIAS AWSSECRETACCESSKEY=secret
-    docker plugin enable PLUGINALIAS
+    docker plugin set aek-s3fs AWSACCESSKEYID=key
+    docker plugin set aek-s3fs AWSSECRETACCESSKEY=secret
+    docker plugin enable aek-s3fs
 
 If there is a need to have a different set of key/secrets, a separate plugin alias should be created with a different set of key/secrets.
 
@@ -74,39 +74,39 @@ For the above example it will be translated to s3fs fuse command option as:
 
 This is an example of mounting and testing a store outside the swarm.  It is assuming the server is called `store1` and the volume name is `mybucket`.
 
-    docker plugin install mochoa/s3fs-volume-plugin --alias s3fs --grant-all-permissions --disable
-    docker plugin set s3fs AWSACCESSKEYID=key
-    docker plugin set s3fs AWSSECRETACCESSKEY=secret
-    docker plugin set s3fs DEFAULT_S3FSOPTS="nomultipart,use_path_request_style"
-    docker plugin enable s3fs
-    docker volume create -d s3fs mybucket
+    docker plugin install aek/docker-s3fs --alias aek-s3fs --grant-all-permissions --disable
+    docker plugin set aek-s3fs AWSACCESSKEYID=key
+    docker plugin set aek-s3fs AWSSECRETACCESSKEY=secret
+    docker plugin set aek-s3fs DEFAULT_S3FSOPTS="nomultipart,use_path_request_style"
+    docker plugin enable aek-s3fs
+    docker volume create -d aek-s3fs mybucket
     docker run --rm -it -v mybucket:/mnt alpine
 
 ## Testing with Oracle Cloud Object storage
 
 Sample usage Oracle Object Storage in S3 compatibilty mode, replace tenant_id and region_id with a proper value:
 
-    docker plugin install mochoa/s3fs-volume-plugin --alias s3fs --grant-all-permissions --disable
-    docker plugin set s3fs AWSACCESSKEYID=key
-    docker plugin set s3fs AWSSECRETACCESSKEY=secret
-    docker plugin set s3fs DEFAULT_S3FSOPTS="nomultipart,use_path_request_style,url=https://[tenant_id].compat.objectstorage.[region-id].oraclecloud.com/"
-    docker plugin enable s3fs
-    docker volume create -d s3fs mybucket
+    docker plugin install aek/docker-s3fs --alias aek-s3fs --grant-all-permissions --disable
+    docker plugin set aek-s3fs AWSACCESSKEYID=key
+    docker plugin set aek-s3fs AWSSECRETACCESSKEY=secret
+    docker plugin set aek-s3fs DEFAULT_S3FSOPTS="nomultipart,use_path_request_style,url=https://[tenant_id].compat.objectstorage.[region-id].oraclecloud.com/"
+    docker plugin enable aek-s3fs
+    docker volume create -d aek-s3fs mybucket
     docker run -it -v mybucket:/mnt alpine
 
 ## Testing with Linode Object storage
 
 Sample usage Oracle Object Storage in S3 compatibilty mode, replace tenant_id and region_id with a proper value:
 
-    docker plugin install mochoa/s3fs-volume-plugin --alias s3fs --grant-all-permissions --disable
-    docker plugin set s3fs AWSACCESSKEYID=key
-    docker plugin set s3fs AWSSECRETACCESSKEY=secret
-    docker plugin set s3fs DEFAULT_S3FSOPTS="url=https://us-southeast-1.linodeobjects.com/"
-    docker plugin enable s3fs
-    docker volume create -d s3fs mybucket
+    docker plugin install aek/docker-s3fs --alias aek-s3fs --grant-all-permissions --disable
+    docker plugin set aek-s3fs AWSACCESSKEYID=key
+    docker plugin set aek-s3fs AWSSECRETACCESSKEY=secret
+    docker plugin set aek-s3fs DEFAULT_S3FSOPTS="url=https://us-southeast-1.linodeobjects.com/"
+    docker plugin enable aek-s3fs
+    docker volume create -d aek-s3fs mybucket
     docker run -it -v mybucket:/mnt alpine
 
-Note: Linode Object Storage required s3fs-volume-plugin built on 10/26/2021 due it required updated ca-certificate package from Ubuntu to properly work with LetsEncrypt certs used by Linode cloud.
+Note: Linode Object Storage required docker-s3fs built on 10/26/2021 due it required updated ca-certificate package from Ubuntu to properly work with LetsEncrypt certs used by Linode cloud.
 
 ## Quick provision on all Swarm cluster nodes
 
@@ -122,7 +122,7 @@ This sample sent by [Vincent Sijben](https://github.com/vincentsijben) shows how
         - AWSSECRETACCESSKEY_FILE=/run/secrets/aws_secret_accesskey
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
-      command: sh -c "docker plugin install --alias s3fs mochoa/s3fs-volume-plugin --grant-all-permissions --disable AWSACCESSKEYID=$$(cat $$AWSACCESSKEYID_FILE) AWSSECRETACCESSKEY=$$(cat $$AWSSECRETACCESSKEY_FILE) DEFAULT_S3FSOPTS='allow_other,uid=1000,gid=1000,url=https://ams3.digitaloceanspaces.com,use_path_request_style,nomultipart'; docker plugin enable s3fs"
+      command: sh -c "docker plugin install --alias aek-s3fs aek/docker-s3fs --grant-all-permissions --disable AWSACCESSKEYID=$$(cat $$AWSACCESSKEYID_FILE) AWSSECRETACCESSKEY=$$(cat $$AWSSECRETACCESSKEY_FILE) DEFAULT_S3FSOPTS='allow_other,uid=1000,gid=1000,url=https://ams3.digitaloceanspaces.com,use_path_request_style,nomultipart'; docker plugin enable s3fs"
       deploy:
         mode: global
         restart_policy:

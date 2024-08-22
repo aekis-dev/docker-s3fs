@@ -1,26 +1,12 @@
 {
-    "description": "S3FS plugin for Docker vDEV",
-    "documentation": "https://github.com/sovarto/docker-volume-plugins/",
+    "description": "Docker S3FS Volume Plugin",
+    "documentation": "https://github.com/aek/docker-s3fs/",
     "entrypoint": [
         "/usr/bin/tini",
         "--",
-        "/s3fs-volume-plugin"
+        "/docker-s3fs"
     ],
     "env": [
-        {
-            "name": "AWSACCESSKEYID",
-            "settable": [
-                "value"
-            ],
-            "value": ""
-        },
-        {
-            "name": "AWSSECRETACCESSKEY",
-            "settable": [
-                "value"
-            ],
-            "value": ""
-        },
         {
             "name": "DEFAULT_S3FSOPTS",
             "settable": [

@@ -15,13 +15,11 @@ type s3fsDriver struct {
 }
 
 func (p *s3fsDriver) Validate(req *volume.CreateRequest) error {
-
 	return nil
 }
 
 func (p *s3fsDriver) MountOptions(req *volume.CreateRequest) ([]string, error) {
-
-	s3fsopts, s3fsoptsInOpts := req.Options["s3fsopts"]
+	s3fsopts, s3fsoptsInOpts := req.Options["o"]
 	bucket, bucketInOpts := req.Options["bucket"]
 	folder, folderInOpts := req.Options["folder"]
 
@@ -30,14 +28,14 @@ func (p *s3fsDriver) MountOptions(req *volume.CreateRequest) ([]string, error) {
 	}
 
 	var s3fsoptsArray []string
-	if s3fsoptsInOpts && s3fsopts != ""{
+	if s3fsoptsInOpts && s3fsopts != "" {
 		s3fsoptsArray = append(s3fsoptsArray, strings.Split(s3fsopts, ",")...)
 	} else if p.defaultS3fsopts != "" {
 		s3fsoptsArray = append(s3fsoptsArray, strings.Split(p.defaultS3fsopts, ",")...)
 	}
 	bucketOption := "bucket=" + bucket
 	if folderInOpts {
-		bucketOption = bucketOption +  ":/" + folder
+		bucketOption = bucketOption + ":/" + folder
 	}
 	s3fsoptsArray = append(s3fsoptsArray, bucketOption)
 

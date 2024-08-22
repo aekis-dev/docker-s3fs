@@ -1,4 +1,4 @@
-name: Release s3fs
+name: Release docker-s3fs
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
             
             - name: Set version number in config.json
               run: |
-                  sed -i 's/vDEV/v'"${{ env.TAG }}"'/g' s3fs-volume-plugin/config.json
+                  sed -i 's/vDEV/v'"${{ env.TAG }}"'/g' src/config.json
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3

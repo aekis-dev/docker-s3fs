@@ -1,19 +1,19 @@
 {
-  "name": "docker-volume-plugins",
+  "name": "docker-s3fs",
   "version": "2.0.9",
-  "description": "Docker Managed Volume Plugins\r =============================",
+  "description": "Docker S3FS Volume Plugins\r =============================",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marcelo-ochoa/docker-volume-plugins.git"
+    "url": "git+https://github.com/aek/docker-s3fs.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/marcelo-ochoa/docker-volume-plugins/issues"
+    "url": "https://github.com/aek/docker-s3fs/issues"
   },
-  "homepage": "https://github.com/marcelo-ochoa/docker-volume-plugins#readme"
+  "homepage": "https://github.com/aek/docker-s3fs#readme"
 }

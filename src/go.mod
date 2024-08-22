@@ -1,4 +1,4 @@
-module s3fs-volume-plugin
+module docker-s3fs
 
 go 1.22.2
 

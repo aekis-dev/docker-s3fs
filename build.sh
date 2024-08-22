@@ -20,9 +20,9 @@ build() {
     fi
     if [ $ARCH == "x86_64" ]
     then
-        docker plugin rm -f sovarto/$1:$TAG || true
+        docker plugin rm -f aek/$1:$TAG || true
     else
-        docker plugin rm -f sovarto/$1-$ARCH:$TAG || true
+        docker plugin rm -f aek/$1-$ARCH:$TAG || true
     fi
     docker rmi -f rootfsimage || true
     docker buildx build --load --platform ${BPLATFORM} \
@@ -37,12 +37,12 @@ build() {
     cp $1/config.json build
     if [ $ARCH == "x86_64" ]
     then
-        docker plugin create sovarto/$1:$TAG build
-        docker plugin push sovarto/$1:$TAG
+        docker plugin create aek/$1:$TAG build
+        docker plugin push aek/$1:$TAG
     else
-        docker plugin create sovarto/$1-$ARCH:$TAG build
-        docker plugin push sovarto/$1-$ARCH:$TAG
+        docker plugin create aek/$1-$ARCH:$TAG build
+        docker plugin push aek/$1-$ARCH:$TAG
     fi
 }
 
-build s3fs-volume-plugin
+build src
