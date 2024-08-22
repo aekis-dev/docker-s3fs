@@ -7,6 +7,26 @@ The idea it to provide a simple way to mount S3 buckets to Docker containers.
 
 The plugin image is built around Alpine Linux. 
 
+## Installation
+To install the plugin you need to run the following command:
+
+    docker plugin install aekis/docker-s3fs
+
+Plugin "aekis/docker-s3fs" is requesting the following privileges:
+
+    - network: [host]
+    - device: [/dev/fuse]
+    - capabilities: [CAP_SYS_ADMIN]
+    Do you grant the above permissions? [y/N]
+
+Accept the permissions by typing `y` and pressing `Enter`.
+
+You could also set an alias for the plugin by using the following command:
+
+    docker plugin install --alias s3fs aekis/docker-s3fs 
+
+and then you could use the alias as the driver to create the volumes. 
+
 ## Docker Compose
 The solution provided here is to use a single plugin and use the driver and driver_opts to provide the credentials and options to S3FS setting up the environment variables AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY so S3FS can use them to mount the bucket.
 
