@@ -3,7 +3,9 @@ Docker Volume Driver for Amazon S3 using S3FS
 
 The purpose of this project is to provide a Docker Volume Driver for Mounting Amazon S3 Buckets using S3FS.  
 
-The idea it to provide a simple way to mount S3 buckets to Docker containers.
+The idea it to provide a simple way to mount S3 buckets to Docker containers. 
+
+The plugin image is built around Alpine Linux. 
 
 ## Docker Compose
 The solution provided here is to use a single plugin and use the driver and driver_opts to provide the credentials and options to S3FS setting up the environment variables AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY so S3FS can use them to mount the bucket.

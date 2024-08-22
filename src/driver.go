@@ -253,16 +253,16 @@ func (p *Driver) Mount(req *volume.MountRequest) (*volume.MountResponse, error) 
 	if aws_tokenInOpts && aws_token != "" {
 		new_env = append(new_env, "AWS_SESSION_TOKEN="+aws_token)
 	}
-	fmt.Printf("new_env: %s\n", new_env)
+	//fmt.Printf("new_env: %s\n", new_env)
 	cmd.Env = new_env
 
 	if out, err := cmd.CombinedOutput(); err != nil {
 		fmt.Printf("Command output: %s\n", out)
 		return &volume.MountResponse{}, fmt.Errorf("error mounting %s: %s", req.Name, err.Error())
 	} else {
-		cmd := exec.Command("df", "--output=fstype", mountPoint)
+		cmd := exec.Command("df", "-T", mountPoint)
 		if out, err := cmd.CombinedOutput(); err != nil || strings.Index(string(out), p.mountExecutable) < 0 {
-			fmt.Printf("df --output=fstype: %s\n", out)
+			fmt.Printf("df -T: %s\n", out)
 			return &volume.MountResponse{}, fmt.Errorf("error mounting %s:\n%s\nfstype should be %s", req.Name, out, p.mountExecutable)
 		}
 	}

@@ -2,7 +2,7 @@
     "description": "Docker S3FS Volume Plugin",
     "documentation": "https://github.com/aek/docker-s3fs/",
     "entrypoint": [
-        "/usr/bin/tini",
+        "/sbin/tini",
         "--",
         "/docker-s3fs"
     ],
