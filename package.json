@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aek/docker-s3fs.git"
+    "url": "git+https://github.com/aekis-dev/docker-s3fs.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aek/docker-s3fs/issues"
+    "url": "https://github.com/aekis-dev/docker-s3fs/issues"
   },
-  "homepage": "https://github.com/aek/docker-s3fs#readme"
+  "homepage": "https://github.com/aekis-dev/docker-s3fs#readme"
 }
